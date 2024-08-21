@@ -1,4 +1,6 @@
 import 'dart:collection';
+import 'package:reactive_ecs/error_handling.dart';
+
 import 'data_structures/sparse_set.dart';
 import 'group.dart';
 import 'state.dart';
@@ -6,9 +8,8 @@ import 'state.dart';
 class EntityManager {
   int currentIndex = 0;
   List<Entity> entities = [];
-  // sparse sets of components
+  // components
   final Map<Type, SparseSet<Component>> components = {};
-  final Map<Type, int> uniqueComponents = {}; // TODO: implement unique components
   // groups
   final Map<GroupMatcher, Group> groups = {};
 
@@ -16,6 +17,22 @@ class EntityManager {
     final e = Entity(index: currentIndex++, components: HashSet(), manager: this);
     entities = [...entities, e];
     return e;
+  }
+
+  /// Returns a unique entity with the given component or throws an exception if there is none.
+  Entity getUniqueEntity<C extends UniqueComponent>() {
+    final set = components[C];
+    assertRecs(set != null && set.sparse.isNotEmpty, uniqueNotFound(C));
+    return entities[set!.sparse.keys.first];
+  }
+
+  /// Returns a unique entity with the given component or null if there is none.
+  ///
+  /// Null safe operation.
+  Entity? getUniqueEntityOrNull<C extends UniqueComponent>() {
+    final set = components[C];
+    if (set == null || set.sparse.isEmpty) return null;
+    return entities[set.sparse.keys.first];
   }
 
   Group group(GroupMatcher matcher) {

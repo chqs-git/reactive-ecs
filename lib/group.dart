@@ -1,11 +1,22 @@
 
 
+import 'package:flutter/cupertino.dart';
 import 'state.dart';
 
-class Group {
+class Group extends ChangeNotifier {
   final List<Entity> entities;
   // constructor
   Group({required this.entities});
+
+  void add(Entity e) {
+    entities.add(e);
+    notifyListeners(); // notify listeners
+  }
+
+  void remove(Entity e) {
+    entities.remove(e);
+    notifyListeners(); // notify listeners
+  }
 }
 
 class GroupMatcher {
