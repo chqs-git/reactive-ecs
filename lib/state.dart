@@ -1,8 +1,10 @@
 import 'dart:collection';
 import 'package:flutter/cupertino.dart';
 import 'package:reactive_ecs/error_handling.dart';
+import 'package:reactive_ecs/utils/group_utils.dart';
 import 'data_structures/sparse_set.dart';
 import 'entity_manager.dart';
+import 'notifiers.dart';
 
 @immutable
 abstract class Component {}
@@ -10,7 +12,7 @@ abstract class Component {}
 @immutable
 abstract class UniqueComponent extends Component {}
 
-class Entity extends ChangeNotifier {
+class Entity extends EntityListenable {
   final int index;
   final HashSet<Type> components;
   final EntityManager manager;
@@ -23,14 +25,17 @@ class Entity extends ChangeNotifier {
 
   bool hasAll(List<Type> types) => types.every((Type t) => hasType(t));
 
-  Entity add(Component c) => this + c;
+  bool hasAny(List<Type> types) => types.isEmpty || types.any((Type t) => hasType(t));
 
-  Entity remove<C extends Component>() => this - C;
+  /// Returns a component of the given type or throws an exception if there is none.
+  C get<C extends Component>() => manager.components[C]!.get(index)! as C;
 
-  bool hasType(Type c) => components.contains(c.runtimeType);
+  /// Returns a component of the given type or null if there is none.
+  C? getOrNull<C extends Component>() => manager.components[C]?.get(index) as C?;
 
-  Entity operator + (Component c) {
+  Entity add<C extends Component>(Component c) {
     assertRecs(isAlive, addOnDestroyed());
+    final prev = getOrNull<C>();
     final sparseSet = manager.components[c.runtimeType];
     assertRecs(c is! UniqueComponent || (sparseSet == null || (sparseSet.sparse.isEmpty) || sparseSet.sparse.containsKey(index)), uniqueRestraint(c.runtimeType));
 
@@ -41,22 +46,37 @@ class Entity extends ChangeNotifier {
     } else {
       sparseSet.add(index, c);
     }
-    components.add(c.runtimeType);
-    notifyListeners(); // notify listeners
+    components.add(c.runtimeType); // add component to entity
+
+    // add entity to groups that match the new set of components
+    if (prev == null) {
+      for (final group in manager.groups.values) {
+        if (group.matcher.matches(this) && !group.contains(this)) group.addEntity(this);
+      }
+    }
+
+    updated(this, prev, c);
     return this;
   }
 
+  Entity remove<C extends Component>() => this - C;
+
+  bool hasType(Type c) => components.contains(c);
+
+  Entity operator +(Component c) => add(c);
+
   Entity operator - (Type C) {
+    final prev = manager.components[C]?.get(index);
     manager.components[C]?.delete(index);
     components.remove(C);
-    notifyListeners(); // notify listeners
+    updated(this, prev, null);
     return this;
   }
 
   void destroy() {
     isAlive = false;
     // remove all components components
-    for (final C in components) {
+    for (final C in components.toList()) {
       this - C;
     }
     manager.entities.removeAt(index); // remove from list of entities

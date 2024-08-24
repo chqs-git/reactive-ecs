@@ -11,7 +11,7 @@ class SparseSet<T> {
   final List<T> dense; // content
 
   // constructor
-  SparseSet({required this.sparse, required this.dense});
+    SparseSet({required this.sparse, required this.dense});
 
   static SparseSet<T> create<T>() {
     return SparseSet<T>(sparse: {}, dense: List.empty(growable: true));
@@ -21,6 +21,11 @@ class SparseSet<T> {
     // Map ID in sparse to back of dense list
     sparse[id] = dense.length;
     dense.add(content);
+  }
+
+  void update(int id, T content) {
+    if (sparse[id] == null) return;
+    dense[sparse[id]!] = content;
   }
 
   void delete(int id) {
