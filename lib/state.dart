@@ -33,9 +33,11 @@ class Entity extends EntityListenable {
   /// Returns a component of the given type or null if there is none.
   C? getOrNull<C extends Component>() => manager.components[C]?.get(index) as C?;
 
-  Entity add<C extends Component>(Component c) {
+  C? _getComponent<C extends Component>(Type type) => manager.components[type]?.get(index) as C?;
+
+  Entity add<C extends Component>(C c) {
     assertRecs(isAlive, addOnDestroyed());
-    final prev = getOrNull<C>();
+    final prev = _getComponent(c.runtimeType) as C?;
     final sparseSet = manager.components[c.runtimeType];
     assertRecs(c is! UniqueComponent || (sparseSet == null || (sparseSet.sparse.isEmpty) || sparseSet.sparse.containsKey(index)), uniqueRestraint(c.runtimeType));
 
@@ -44,14 +46,26 @@ class Entity extends EntityListenable {
       newSparseSet.add(index, c);
       manager.components.addAll({ c.runtimeType: newSparseSet });
     } else {
-      sparseSet.add(index, c);
+      sparseSet.contains(index) ? sparseSet.update(index, c) : sparseSet.add(index, c);
     }
     components.add(c.runtimeType); // add component to entity
 
-    // add entity to groups that match the new set of components
     if (prev == null) {
+      // add entity to groups that match the new set of components
       for (final group in manager.groups.values) {
         if (group.matcher.matches(this) && !group.contains(this)) group.addEntity(this);
+      }
+      // add to maps
+      for (final map in manager.maps) {
+        if (map.isType(c.runtimeType)) {
+          subscribe(map.subscribe);
+        }
+      }
+
+      for(final map in manager.multiMaps) {
+        if (map.isType(c.runtimeType)) {
+          subscribe(map.subscribe);
+        }
       }
     }
 
@@ -79,7 +93,7 @@ class Entity extends EntityListenable {
     for (final C in components.toList()) {
       this - C;
     }
-    manager.entities.removeAt(index); // remove from list of entities
+    manager.entities.delete(index); // remove from list of entities
     notifyListeners(); // notify listeners
   }
 }

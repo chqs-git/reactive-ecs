@@ -64,11 +64,12 @@ class GroupMatcher {
   final List<Type> all;
   final List<Type> any;
   final List<Type> none;
+  final List<Type> relevant;
   // constructor
-  GroupMatcher({this.all = const [], this.any = const [], this.none = const []});
+  GroupMatcher({this.all = const [], this.any = const [], this.none = const [], this.relevant = const []});
 
   bool contains(Type C) {
-    return all.contains(C) || any.contains(C) || none.contains(C);
+    return all.contains(C) || any.contains(C) || none.contains(C) || relevant.contains(C);
   }
 
   bool matches(Entity e) => e.hasAll(all) && e.hasAny(any) && (none.isEmpty || !e.hasAny(none));

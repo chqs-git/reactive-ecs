@@ -12,6 +12,12 @@ class Price implements Component {
   Price(this.value);
 }
 
+class Category implements Component {
+  final String name;
+  // constructor
+  Category(this.name);
+}
+
 class Sale implements Component {
   final double discount; // %
 

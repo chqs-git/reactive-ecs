@@ -16,10 +16,12 @@ A Entity Component System is a pattern that **separates state from behaviour**. 
 - **Groups**;
 - **Listenable**;
 - **Widgets**;
-- **Maps** (Missing);
+- **Maps**;
 - **Tests** (Incomplete);
+- **Examples** (Missing);
 - **Documentation & Comments** (Incomplete);
 - **Relations** (Future);
+- **Web Inspector** (Future);
 - **Query** (Future);
 
 ## Usage

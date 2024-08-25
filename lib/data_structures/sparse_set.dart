@@ -17,17 +17,20 @@ class SparseSet<T> {
     return SparseSet<T>(sparse: {}, dense: List.empty(growable: true));
   }
 
+  /// Add new element to the end of the dense list
   void add(int id, T content) {
     // Map ID in sparse to back of dense list
     sparse[id] = dense.length;
     dense.add(content);
   }
 
+  /// Update element at index with new content
   void update(int id, T content) {
     if (sparse[id] == null) return;
     dense[sparse[id]!] = content;
   }
 
+  /// Delete element at index
   void delete(int id) {
     if (sparse[id] == null) return;
 
@@ -47,8 +50,11 @@ class SparseSet<T> {
     dense.removeAt(lastIndex);
   }
 
+  /// Get element at index
   T? get(int id) {
     if (sparse[id] == null) return null;
     return dense[sparse[id]!];
   }
+
+  bool contains(int id) => sparse.containsKey(id);
 }

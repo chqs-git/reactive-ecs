@@ -1,6 +1,9 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:reactive_ecs/group.dart';
 import 'package:reactive_ecs/state.dart';
+
+import 'entity_manager.dart';
 
 /// Interface that all behaviours must implement.
 abstract class System {}
@@ -20,8 +23,19 @@ abstract class CleanupSystem extends System {
   void cleanup();
 }
 
+
+abstract class EntityManagerSystem extends System {
+  late EntityManager __manager;
+
+  set manager(EntityManager m){
+    __manager = m;
+  }
+
+  EntityManager get entityManager => __manager;
+}
+
 /// Interface for systems that need to run logic when a condition is met.
-abstract class ReactiveSystem extends System {
+abstract class ReactiveSystem extends EntityManagerSystem {
   GroupMatcher get matcher;
   GroupEventType get event;
 
