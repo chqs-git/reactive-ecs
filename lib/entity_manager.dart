@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'package:reactive_ecs/error_handling.dart';
 import 'package:reactive_ecs/maps.dart';
+import 'package:reactive_ecs/relationship.dart';
 import 'data_structures/sparse_set.dart';
 import 'group.dart';
 import 'state.dart';
@@ -10,6 +11,9 @@ class EntityManager {
   final SparseSet<Entity> entities = SparseSet.create();
   // components
   final Map<Type, SparseSet<Component>> components = {};
+  // relationships
+  final Map<Type, SparseSet<RelationshipPair>> relationships = {};
+  final Map<Type, SparseSet<List<int>>> relationshipReverse = {};
   // groups
   final Map<GroupMatcher, Group> groups = {};
   final List<EntityMap> maps = [];

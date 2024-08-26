@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'package:flutter/cupertino.dart';
 import 'package:reactive_ecs/error_handling.dart';
+import 'package:reactive_ecs/relationship.dart';
 import 'package:reactive_ecs/utils/group_utils.dart';
 import 'data_structures/sparse_set.dart';
 import 'entity_manager.dart';
@@ -93,6 +94,11 @@ class Entity extends EntityListenable {
     for (final C in components.toList()) {
       this - C;
     }
+
+    for (final R in manager.relationships.keys) {
+      manager.relationships[R]?.delete(id(this, R));
+    }
+
     manager.entities.delete(index); // remove from list of entities
     notifyListeners(); // notify listeners
   }
