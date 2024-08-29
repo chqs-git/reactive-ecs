@@ -5,9 +5,9 @@ import 'package:reactive_ecs/reactive_ecs.dart';
 import 'error_handling.dart';
 
 @immutable
-abstract class Relationship {}
+abstract class Relationship extends EntityAttribute {}
 
-class RelationshipPair {
+class RelationshipPair extends Component {
   final Relationship relationship;
   final int entityIndex;
 
@@ -17,21 +17,25 @@ class RelationshipPair {
 extension RelationshipOperations on Entity {
   int id(Entity e, Type type) => e.index ^ type.hashCode;
 
-  bool hasRelationship<R extends Relationship>() => manager.relationships[R]?.contains(id(this, R)) ?? false;
+  bool hasRelationship<R extends Relationship>() => relationships.contains(R);
 
-  R getRelationship<R extends Relationship>() => manager.relationships[R]!.get(id(this, R))!.relationship as R;
+  bool hasRelationshipByType(Type type) => relationships.contains(type);
 
-  R? getOrNullRelationship<R extends Relationship>() => manager.relationships[R]?.get(id(this, R))?.relationship as R?;
+  bool hasAllRelationships(List<Type> types) => types.every((Type t) => hasRelationshipByType(t));
+
+  bool hasAnyRelationships(List<Type> types) => types.isEmpty || types.any((Type t) => hasRelationshipByType(t));
+
+  R getRelationship<R extends Relationship>() => (manager.components[R]!.get(id(this, R))! as RelationshipPair).relationship as R;
+
+  R? getOrNullRelationship<R extends Relationship>() => (manager.components[R]?.get(id(this, R)) as RelationshipPair?)?.relationship as R?;
 
   Entity getRelationshipEntity<R extends Relationship>() {
-    final index = manager.relationships[R]!.get(id(this, R))!.entityIndex;
-    return manager.entities.get(index)!;
+    final entity = getRelationshipEntityOrNullByType(R);
+    assertRecs(entity != null, componentOrRelationshipIsNull(R));
+    return entity!;
   }
 
-  Entity? getOrNullRelationshipEntity<R extends Relationship>() {
-    final index = manager.relationships[R]?.get(id(this, R))?.entityIndex;
-    return index != null ? manager.entities.get(index) : null;
-  }
+  Entity? getOrNullRelationshipEntity<R extends Relationship>() => getRelationshipEntityOrNullByType(R);
 
   List<Entity> getAllEntitiesWithRelationship<R extends Relationship>() {
     final sparseSet = manager.relationshipReverse[R];
@@ -44,13 +48,15 @@ extension RelationshipOperations on Entity {
     assertRecs(isAlive, addOnDestroyed());
 
     final relationshipIndex = id(this, R);
-    final sparseSet = manager.relationships[R];
+    final sparseSet = manager.components[R];
     final reverseSparseSet = manager.relationshipReverse[R];
+    final prev = getOrNullRelationship<R>();
+    final prevEntity = getOrNullRelationshipEntity<R>();
     final relationshipPair = RelationshipPair(relationship: relationship, entityIndex: entity.index);
     if (sparseSet == null) {
       final newSparseSet = SparseSet.create<RelationshipPair>();
       newSparseSet.add(relationshipIndex, relationshipPair);
-      manager.relationships.addAll({ R: newSparseSet });
+      manager.components.addAll({ R: newSparseSet });
       // reverse
       final newReverseSparseSet = SparseSet.create<List<int>>();
       newReverseSparseSet.add(entity.index, [index]);
@@ -62,17 +68,30 @@ extension RelationshipOperations on Entity {
       reverseSparseSet!.contains(entity.index)
           ? reverseSparseSet.update(entity.index, [...reverseSparseSet.get(entity.index)!, index])
           : reverseSparseSet.add(entity.index, [index]);
-    }
 
-    // TODO: add to groups that match the new set of relationships
+      if (prevEntity != null) {
+        reverseSparseSet.update(prevEntity.index, reverseSparseSet.get(prevEntity.index)!..remove(index));
+      }
+    }
+    relationships.add(R);
+    addEntityUpdates(prev, relationship);
     return this;
   }
 
-  Entity removeRelationship<R extends Relationship>(Entity entity) {
-    final relationshipIndex = id(this, R);
-    final prev = manager.relationships[R]?.get(relationshipIndex);
-    manager.relationships[R]?.delete(relationshipIndex);
-    manager.relationshipReverse[R]?.get(entity.index)?.remove(relationshipIndex);
+  Entity removeRelationship<R extends Relationship>() => removeRelationshipByType(R);
+
+  Entity removeRelationshipByType(Type type) {
+    final relationshipIndex = id(this, type);
+    final prev = getRelationshipEntityOrNullByType(type);
+    manager.components[type]?.delete(relationshipIndex);
+    if (prev != null) manager.relationshipReverse[type]?.get(prev.index)?.remove(relationshipIndex);
+    relationships.remove(type);
+    updated(this, prev?.getOrNullRelationship(), null); // notify listeners
     return this;
+  }
+
+  Entity? getRelationshipEntityOrNullByType(Type type) {
+    final index = (manager.components[type]?.get(id(this, type)) as RelationshipPair?)?.entityIndex;
+    return index != null ? manager.entities.get(index) : null;
   }
 }

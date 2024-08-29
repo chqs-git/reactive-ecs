@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:reactive_ecs/behaviour.dart';
+import 'package:reactive_ecs/system.dart';
 import 'package:reactive_ecs/data_structures/sparse_set.dart';
 import 'package:reactive_ecs/entity_manager.dart';
 import 'package:reactive_ecs/utils/group_utils.dart';
@@ -30,20 +30,20 @@ class Group extends GroupNotifier {
     e.subscribe(subscribeToEntity); // subscribe to changes on new entity
   }
 
-  void subscribeToEntity(Entity e, Component? prev, Component? next) {
+  void subscribeToEntity(Entity e, EntityAttribute? prev, EntityAttribute? next) {
     final isRelevant = matcher.contains(prev?.runtimeType ?? next.runtimeType);
     if (!isRelevant) return;
     if (matcher.matches(e)) {
       data.update(e.index, e); // update entity
       if (prev == null) {
-        added(this, e);
+        added(this, e, ChangeDetails(prev: prev, next: next));
       } else if (next == null) {
-        removed(this, e);
+        removed(this, e, ChangeDetails(prev: prev, next: next));
       } else {
-        updated(this, e);
+        updated(this, e, ChangeDetails(prev: prev, next: next));
       }
     } else { // else remove: entity no longer belongs to group
-      removed(this, e);
+      removed(this, e, ChangeDetails(prev: prev, next: next));
       data.delete(e.index);
     }
   }

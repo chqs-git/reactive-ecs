@@ -1,9 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:reactive_ecs/entity_manager.dart';
 import 'package:reactive_ecs/group.dart';
+import 'package:reactive_ecs/reactive_ecs.dart';
+import 'package:reactive_ecs/relationship.dart';
 import 'package:reactive_ecs/utils/group_utils.dart';
 
 import 'components.dart';
+import 'relationships.dart';
 
 void main() {
   test('Create entities', (){
@@ -128,7 +131,7 @@ void main() {
 
     expect(group.length, 2);
     int numOfChanges = 0;
-    group.subscribe((event, entity) { numOfChanges++; }); // listen for changes and update numOfChanges
+    group.subscribe((event, entity, details) { numOfChanges++; }); // listen for changes and update numOfChanges
 
     e2 + Sale(50); // add 50 % safe
 

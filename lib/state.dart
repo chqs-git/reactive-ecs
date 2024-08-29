@@ -7,8 +7,10 @@ import 'data_structures/sparse_set.dart';
 import 'entity_manager.dart';
 import 'notifiers.dart';
 
+abstract class EntityAttribute {}
+
 @immutable
-abstract class Component {}
+abstract class Component extends EntityAttribute {}
 
 @immutable
 abstract class UniqueComponent extends Component {}
@@ -16,11 +18,12 @@ abstract class UniqueComponent extends Component {}
 class Entity extends EntityListenable {
   final int index;
   final HashSet<Type> components;
+  final HashSet<Type> relationships;
   final EntityManager manager;
   bool isAlive = true;
 
   // constructor
-  Entity({required this.index, required this.components, required this.manager});
+  Entity({required this.index, required this.components, required this.relationships, required this.manager});
 
   bool has<C extends Component>() => components.contains(C);
 
@@ -50,27 +53,8 @@ class Entity extends EntityListenable {
       sparseSet.contains(index) ? sparseSet.update(index, c) : sparseSet.add(index, c);
     }
     components.add(c.runtimeType); // add component to entity
-
-    if (prev == null) {
-      // add entity to groups that match the new set of components
-      for (final group in manager.groups.values) {
-        if (group.matcher.matches(this) && !group.contains(this)) group.addEntity(this);
-      }
-      // add to maps
-      for (final map in manager.maps) {
-        if (map.isType(c.runtimeType)) {
-          subscribe(map.subscribe);
-        }
-      }
-
-      for(final map in manager.multiMaps) {
-        if (map.isType(c.runtimeType)) {
-          subscribe(map.subscribe);
-        }
-      }
-    }
-
-    updated(this, prev, c);
+    
+    addEntityUpdates(prev, c);
     return this;
   }
 
@@ -94,12 +78,35 @@ class Entity extends EntityListenable {
     for (final C in components.toList()) {
       this - C;
     }
-
-    for (final R in manager.relationships.keys) {
-      manager.relationships[R]?.delete(id(this, R));
+    
+    for(final R in relationships.toList()) {
+      removeRelationshipByType(R);
     }
 
     manager.entities.delete(index); // remove from list of entities
     notifyListeners(); // notify listeners
+  }
+
+  void addEntityUpdates(EntityAttribute? prev, EntityAttribute? next) {
+    if (prev == null) {
+      // add entity to groups that match the new set of components
+      for (final group in manager.groups.values) {
+        if (group.matcher.matches(this) && !group.contains(this)) group.addEntity(this);
+      }
+      // add to maps
+      for (final map in manager.maps) {
+        if (map.isType(next.runtimeType)) {
+          subscribe(map.subscribe);
+        }
+      }
+
+      for(final map in manager.multiMaps) {
+        if (map.isType(next.runtimeType)) {
+          subscribe(map.subscribe);
+        }
+      }
+    }
+
+    updated(this, prev, next); // notify listeners
   }
 }

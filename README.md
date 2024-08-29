@@ -7,6 +7,18 @@ First of all, **what is the ECS paradigm**?
 A Entity Component System is a pattern that **separates state from behaviour**. It is composed by 3 main parts:
 // image here
 
+## Todo List
+
+1. Complex example; [X]
+2. Match groups with relationships;
+3. Add details (prev and next) info to reactive systems; [X]
+4. Add systems to already existing behaviors; [X] (Not necessary actually)
+5. Update entities when a change occurs in one of the entities that it depends on; [X] (Not necessary actually)
+6. Tests; 
+7. Documentation;
+8. FAQ:
+    - Inconsistent context;
+
 ## In-Development
 
 - **Entities**;
@@ -17,10 +29,10 @@ A Entity Component System is a pattern that **separates state from behaviour**. 
 - **Listenable**;
 - **Widgets**;
 - **Maps**;
+- **Relationships** (Beta - Cannot match groups with relationships);
 - **Tests** (Incomplete);
-- **Examples** (Missing);
+- **Examples** (Incomplete);
 - **Documentation & Comments** (Incomplete);
-- **Relations** (Future);
 - **Web Inspector** (Future);
 - **Query** (Future);
 

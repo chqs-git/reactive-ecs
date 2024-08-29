@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reactive_ecs/behaviour.dart';
+import 'package:reactive_ecs/system.dart';
 import 'package:reactive_ecs/entity_manager.dart';
 import 'package:reactive_ecs/group.dart';
 import 'package:reactive_ecs/state.dart';
-import 'package:reactive_ecs/system.dart';
+import 'package:reactive_ecs/behaviour.dart';
 import 'package:reactive_ecs/utils/group_utils.dart';
 
 class Place extends Component {
@@ -61,7 +61,7 @@ class RatingSystem extends ReactiveSystem {
   GroupEventType get event => GroupEventType.add;
 
   @override
-  void execute(Entity entity) {
+  void execute(Entity entity, ChangeDetails details) {
     final logger = entityManager.getUniqueEntity<Logger>();
     Logger.logMsg(logger, "->Entered Rating System");
     final rating = entity.get<UserRating>();
@@ -86,7 +86,7 @@ class PlaceLoggingSystem extends ReactiveSystem {
   GroupEventType get event => GroupEventType.addOrUpdated;
 
   @override
-  void execute(Entity entity) {
+  void execute(Entity entity, ChangeDetails details) {
     final logger = entityManager.getUniqueEntity<Logger>();
     Logger.logMsg(logger, "->Entered Place Logging System");
     final place = entity.get<Place>();

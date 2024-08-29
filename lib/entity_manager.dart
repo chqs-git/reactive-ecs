@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'package:reactive_ecs/error_handling.dart';
 import 'package:reactive_ecs/maps.dart';
-import 'package:reactive_ecs/relationship.dart';
 import 'data_structures/sparse_set.dart';
 import 'group.dart';
 import 'state.dart';
@@ -12,7 +11,6 @@ class EntityManager {
   // components
   final Map<Type, SparseSet<Component>> components = {};
   // relationships
-  final Map<Type, SparseSet<RelationshipPair>> relationships = {};
   final Map<Type, SparseSet<List<int>>> relationshipReverse = {};
   // groups
   final Map<GroupMatcher, Group> groups = {};
@@ -20,7 +18,7 @@ class EntityManager {
   final List<EntityMultiMap> multiMaps = [];
 
   Entity createEntity() {
-    final e = Entity(index: currentIndex++, components: HashSet(), manager: this);
+    final e = Entity(index: currentIndex++, components: HashSet(), relationships: HashSet(), manager: this);
     entities.add(e.index, e);
     return e;
   }
@@ -97,15 +95,23 @@ class EntityManager {
   }
 
   List<Entity> _fromAll(GroupMatcher matcher) {
-    final set = components[matcher.all.first];
-    return (set?.sparse.entries.map<Entity?>((entry) => entities.get(entry.key)) ?? []).nonNulls.toList();
+    final type = matcher.all.first;
+    final set = components[type];
+    final entities = set?.sparse.entries.map<Entity?>((entry) => this.entities.get(entry.key));
+      // (set?.dense as List<RelationshipPair>).map((RelationshipPair r) => this.entities.get(r.entityIndex));
+
+    return (entities ?? [])
+        .nonNulls
+        .toList();
   }
 
   List<Entity> _fromAny(GroupMatcher matcher) {
     final entitiesMutable = <Entity>[];
     for (final C in matcher.any) {
       final set = components[C];
-      entitiesMutable.addAll((set?.sparse.entries.map<Entity?>((entry) => entities.get(entry.key)) ?? []).nonNulls);
+      final entities = set?.sparse.entries.map<Entity?>((entry) => this.entities.get(entry.key));
+      // (set?.dense as List<RelationshipPair>).map((RelationshipPair r) => this.entities.get(r.entityIndex));
+      entitiesMutable.addAll((entities ?? []).nonNulls);
     }
     return entitiesMutable;
   }

@@ -1,23 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:reactive_ecs/entity_manager.dart';
-import 'package:reactive_ecs/system.dart';
+import 'package:reactive_ecs/behaviour.dart';
 import 'package:reactive_ecs/widgets/system.dart';
 
-import '../behaviour.dart';
+import '../system.dart';
 
 class EntityManagerProvider extends InheritedWidget {
   final EntityManager entityManager;
-  final BehaviourManager behaviourManager;
+
   // constructor
-  EntityManagerProvider({super.key, required this.entityManager, required List<System> systems, required super.child})
-    : behaviourManager = BehaviourManager(
-      behaviour: _buildBehaviour(systems, entityManager),
-      reactiveBehaviour: ReactiveBehaviour(systems: systems.whereType<ReactiveSystem>().toList(), entityManager: entityManager),
-      child: child
-  );
+  EntityManagerProvider({super.key, required this.entityManager, required List<System> systems, required Widget child})
+    : super(child: BehaviourManager(
+        entityManager: entityManager,
+        behaviour: _buildBehaviour(systems, entityManager),
+        reactiveBehaviour: ReactiveBehaviour(systems: systems.whereType<ReactiveSystem>().toList(), entityManager: entityManager),
+        executeSystems: systems.whereType<ExecuteSystem>().toList(),
+        child: child
+      ));
 
   @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) => false; // TODO: check
+  bool updateShouldNotify(covariant EntityManagerProvider oldWidget) =>
+      oldWidget.entityManager.currentIndex != entityManager.currentIndex ||
+      oldWidget.entityManager.components.length != entityManager.components.length;
 
   static EntityManager of(BuildContext context) {
     final provider = context.dependOnInheritedWidgetOfExactType<EntityManagerProvider>();

@@ -9,6 +9,9 @@
       <excludeFolder url="file://$MODULE_DIR$/examples/counter_app/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/examples/counter_app/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/examples/counter_app/build" />
+      <excludeFolder url="file://$MODULE_DIR$/examples/fleet_management_app/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/examples/fleet_management_app/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/examples/fleet_management_app/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

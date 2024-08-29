@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reactive_ecs/entity_manager.dart';
+import 'package:reactive_ecs/reactive_ecs.dart';
 import 'package:reactive_ecs/relationship.dart';
-import 'package:reactive_ecs/state.dart';
 
 class Place extends Component {
   final String name;
@@ -19,6 +18,8 @@ class RatingOfPlace extends Relationship {
   final String comment;
   RatingOfPlace({required this.rating, required this.comment});
 }
+
+class User extends Component {}
 
 class Owner extends Relationship {}
 
@@ -61,5 +62,31 @@ void main() {
     final userRatings = place.getAllEntitiesWithRelationship<RatingOfPlace>();
     expect(userRatings.length, 3);
     expect(userRatings[0].getRelationship<RatingOfPlace>().rating, 5);
+  });
+
+  test('listen to changes in group of entities with relationships', () {
+    final em = EntityManager();
+    final place = em.createEntity()
+      ..add(Place(name: "Water Park Gerês"))
+      ..add(Rating(rating: 4.0, numberOfRatings: 229));
+
+    final rating_1 = em.createEntity()
+      ..add(User())
+      ..addRelationship(RatingOfPlace(rating: 5, comment: "Loved the food and everyone was nice"), place);
+
+    final rating_2 = em.createEntity()
+      ..add(User())
+      ..addRelationship(RatingOfPlace(rating: 3, comment: "Food took too long"), place);
+
+    final group = em.group(GroupMatcher(all: [User]));
+    expect(group.length, 2);
+    expect(group.entities[0].getRelationship<RatingOfPlace>().rating, 5);
+
+    final rating_3 = em.createEntity()
+      ..add(User())
+      ..addRelationship(RatingOfPlace(rating: 4, comment: "Great location and prices"), place);
+
+    expect(group.length, 3);
+    expect(group.entities[3].getRelationship<RatingOfPlace>().rating, 4);
   });
 }

@@ -13,7 +13,7 @@ class EntityMap<C extends Component, T> extends ChangeNotifier {
 
   bool isType(Type type) => C == type;
 
-  void subscribe(Entity e, Component? prev, Component? next) {
+  void subscribe(Entity e, EntityAttribute? prev, EntityAttribute? next) {
     if (next is! C? || prev is! C?) return;
     // update key producer
     if (prev != null) data.remove(keyProducer(prev as C));
@@ -38,7 +38,7 @@ class EntityMultiMap<C extends Component, T> extends ChangeNotifier {
   
   bool isType(Type type) => C == type;
   
-  void subscribe(Entity e, Component? prev, Component? next) {
+  void subscribe(Entity e, EntityAttribute? prev, EntityAttribute? next) {
     if (next is! C? || prev is! C?) return;
     // update key producer
     if (prev != null) {

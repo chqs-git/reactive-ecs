@@ -13,6 +13,7 @@ class EntityObservingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final em = context.entityManager;
     final entity = provider(context.entityManager);
     return ListenableBuilder(
       listenable: entity,
