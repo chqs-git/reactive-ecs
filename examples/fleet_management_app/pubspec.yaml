@@ -64,6 +64,8 @@ flutter:
   assets:
     - assets/cargo_icon.png
     - assets/oil_rig_icon.png
+    - assets/ship.png
+    - assets/oil_rig.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

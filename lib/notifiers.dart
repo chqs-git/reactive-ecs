@@ -4,8 +4,10 @@ import 'package:reactive_ecs/state.dart';
 import 'system.dart';
 import 'group.dart';
 
+/// The [EntityCallback] is a function that is called when an [Entity] is updated.
 typedef EntityCallback = void Function(Entity e, EntityAttribute? prev, EntityAttribute? next);
 
+/// The [EntityListenable] is a [ChangeNotifier] that can be used to listen to changes in an [Entity].
 class EntityListenable extends ChangeNotifier {
   final List<EntityCallback> _subscribers = [];
 
@@ -26,8 +28,10 @@ class EntityListenable extends ChangeNotifier {
   }
 }
 
+/// The [GroupCallback] is a function that is called when an [Entity] is added, updated or removed from a [Group].
 typedef GroupCallback = void Function(GroupEventType type, Entity entity, ChangeDetails details);
 
+/// The [GroupNotifier] is a [ChangeNotifier] that can be used to listen to changes in a [Group].
 class GroupNotifier extends ChangeNotifier {
   final List<GroupCallback> _subscribers = [];
 

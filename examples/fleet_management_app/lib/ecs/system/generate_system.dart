@@ -48,7 +48,7 @@ class GenerateSystem extends EntityManagerSystem implements InitSystem {
     }
 
     // create vehicles
-    final numVehicles = (random.nextInt(2) + 3) * entityMultiplier; // between 3 and 5
+    final numVehicles = (random.nextInt(5) + 5) * entityMultiplier; // between 5 and 10
     for(var i = 0; i < numVehicles; i++) {
       final vehicle = entityManager.createEntity()
         ..add(Name(name: 'Vehicle $i'))

@@ -101,7 +101,7 @@ void main() {
     final em = EntityManager();
     Behaviour behaviour = Behaviour(initSystems: [FetchPlaces()], entityManager: em); // create system
     behaviour.init();
-    expect(em.entities.dense.length, 3); // 3 places
+    expect(em.entities.dense.length, 4); // 3 places and one logger entity
     expect(em.group(GroupMatcher(all: [Place, PlaceRating])).length, 3); // 3 places with ratings
   });
   
@@ -110,7 +110,7 @@ void main() {
     Behaviour behaviour = Behaviour(initSystems: [FetchPlaces()], entityManager: em); // create system
     behaviour.init();
     final group = em.group(GroupMatcher(all: [Place, PlaceRating]));
-    expect(em.entities.dense.length, 3); // 3 places
+    expect(em.entities.dense.length, 4); // 3 places and one logger entity
     expect(group.length, 3); // 3 places with ratings
     
     final reactiveBehaviour = ReactiveBehaviour(systems: [RatingSystem()], entityManager: em);

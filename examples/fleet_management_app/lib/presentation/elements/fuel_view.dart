@@ -12,7 +12,7 @@ class FuelView extends StatelessWidget {
     height: 10,
     child: LinearProgressIndicator(
       value: fuel.level / fuel.maxCapacity,
-      valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+      valueColor: AlwaysStoppedAnimation<Color>(Color.lerp(Colors.redAccent, Colors.green, fuel.level / fuel.maxCapacity)!),
       backgroundColor: Colors.grey,
     )
   );

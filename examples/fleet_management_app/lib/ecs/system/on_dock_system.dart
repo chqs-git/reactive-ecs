@@ -27,13 +27,13 @@ class OnDockSystem extends ReactiveSystem {
 
   @override
   void execute(Entity entity, ChangeDetails details) {
-    if (!entity.hasRelationship<DockedIn>() || !entity.hasRelationship<DeliveryTo>()) return;
-    final delivery = entity.getRelationship<DeliveryTo>();
+    if (!entity.has<DockedIn>() || !entity.has<DeliveryTo>()) return;
+    final delivery = entity.get<DeliveryTo>();
     final fuel = entity.get<Fuel>();
     entity + Status(state: StatusState.idle); // update status
     final cargos = entity.getAllEntitiesWithRelationship<CargoOf>();
     final name = entity.get<Name>();
-    final station = entity.getRelationshipEntity<DockedIn>();
+    final (station, _) = entity.getRelationship<DockedIn>();
     final stationDetails = station.get<Station>();
     print('${name.name} docked in ${station.get<Name>().name}');
 

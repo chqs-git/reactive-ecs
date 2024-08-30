@@ -16,8 +16,8 @@ class MoveSystem extends EntityManagerSystem implements ExecuteSystem {
   @override
   void execute() {
     for (final vehicle in vehicles.entities) {
-      if (!vehicle.hasRelationship<DeliveryTo>() || vehicle.hasRelationship<DockedIn>()) continue;
-      final route = vehicle.getRelationship<DeliveryTo>();
+      if (!vehicle.has<DeliveryTo>() || vehicle.has<DockedIn>()) continue;
+      final route = vehicle.get<DeliveryTo>();
       final position = vehicle.get<Vehicle>().position;
       final dir = position.normalize(route.end);
       // get rotation from dir
@@ -26,20 +26,20 @@ class MoveSystem extends EntityManagerSystem implements ExecuteSystem {
           position: Position(x: position.x + dir.x * speed, y: position.y + dir.y * speed),
           rotation: rotation
       ); // update position
-      vehicle + vehicle.get<Fuel>().addFuel(-.001);
+      vehicle + vehicle.get<Fuel>().addFuel(-.0025);
     }
   }
 
   @override
   void cleanup() {
     for (final vehicle in vehicles.entities) {
-      if (!vehicle.hasRelationship<DeliveryTo>() || vehicle.hasRelationship<DockedIn>()) continue;
+      if (!vehicle.has<DeliveryTo>() || vehicle.has<DockedIn>()) continue;
 
-      final route = vehicle.getRelationship<DeliveryTo>();
-      final stationEntity = vehicle.getRelationshipEntity<DeliveryTo>();
+      final route = vehicle.get<DeliveryTo>();
+      final (stationEntity, station) = vehicle.getRelationship<DeliveryTo>();
       final position = vehicle.get<Vehicle>().position;
 
-      if (distanceTo(position, route.end) < 6) {
+      if (distanceTo(position, route.end) < 8) {
         vehicle.addRelationship(DockedIn(), stationEntity);
       }
     }

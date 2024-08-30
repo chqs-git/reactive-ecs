@@ -4,37 +4,11 @@ RECS is a fast & lightweight Reactive Entity Component System pattern for Dart a
 state management. This project is Open Source and is under the MIT License.
 
 First of all, **what is the ECS paradigm**?
+
 A Entity Component System is a pattern that **separates state from behaviour**. It is composed by 3 main parts:
-// image here
-
-## Todo List
-
-1. Complex example; [X]
-2. Match groups with relationships;
-3. Add details (prev and next) info to reactive systems; [X]
-4. Add systems to already existing behaviors; [X] (Not necessary actually)
-5. Update entities when a change occurs in one of the entities that it depends on; [X] (Not necessary actually)
-6. Tests; 
-7. Documentation;
-8. FAQ:
-    - Inconsistent context;
-
-## In-Development
-
-- **Entities**;
-- **Components**;
-- **Unique Components**;
-- **Systems**;
-- **Groups**;
-- **Listenable**;
-- **Widgets**;
-- **Maps**;
-- **Relationships** (Beta - Cannot match groups with relationships);
-- **Tests** (Incomplete);
-- **Examples** (Incomplete);
-- **Documentation & Comments** (Incomplete);
-- **Web Inspector** (Future);
-- **Query** (Future);
+- Entities: A unique identifier that groups components (and relationships);
+- Components: Data that represents the state of an entity;
+- Systems: Logic that operates on entities with specific components;
 
 ## Usage
 
@@ -45,3 +19,55 @@ dependencies:
   reactive-ecs:
       git: https://github.com/chqs-git/reactive-ecs.git
 ```
+
+#### Code Example
+
+```dart
+final max = entityManager.createEntity()
+    ..add(Self())
+    ..add(Name(value: "Max"))
+    ..add(PersonalDetails(hobby: 'Drawing', favoriteColor: Colors.green))
+    ..addRelationship(ChildOf(order: 0), parentEntity)
+    ..addRelationship(EmployeeOf(position: JobPosition.programmer), jobEntity);
+
+@override
+Widget build(BuildContext context) => EntityObservingWidget(
+    provider: (em) => em.getUniqueComponent<Self>(),
+    builder: (context, entity, _) => Column(
+        children: [
+            Text(entity.get<Name>().value),
+            Row(
+                children: [
+                    Text(entity.get<PersonalDetails>().hobby),
+                    Color(entity.get<PersonalDetails>().favoriteColor),
+                ]
+            ),
+            Text('Parent: ${entity.getRelationship<ChildOf>().$1.get<Name>().value}')
+        ]
+    )
+);
+```
+
+## Features
+
+- **Entities, components & systems**;
+- **Unique Components**;
+- **Groups**;
+- **Listenable**;
+- **Widgets**;
+- **Maps**;
+- **Relationships**;
+- **Web Inspector** (Future);
+
+## Support
+
+For contact information use: franciscobarreiras.fb@gmail.com.
+
+To Support:
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y312MBRY)
+
+## Acknowledgements
+> Other works that inspired and contributed to this package. (thank you)
+- [entitas_ff](https://github.com/mzaks/entitas_ff)
+- [flecs](https://github.com/SanderMertens/flecs)
+- [seecs](https://github.com/chrischristakis/seecs)

@@ -1,30 +1,30 @@
 import 'package:reactive_ecs/state.dart';
 
-class ShoppingItem implements Component {
+class ShoppingItem extends Component {
   final String id;
 
   ShoppingItem(this.id);
 }
 
-class Price implements Component {
+class Price extends Component {
   final double value;
 
   Price(this.value);
 }
 
-class Category implements Component {
+class Category extends Component {
   final String name;
   // constructor
   Category(this.name);
 }
 
-class Sale implements Component {
+class Sale extends Component {
   final double discount; // %
 
   Sale(this.discount);
 }
 
-class ShopService implements UniqueComponent {
+class ShopService extends UniqueComponent {
   double? buyItem(Entity entity) {
     if (!entity.hasAll([ShoppingItem, Price])) return null;
 

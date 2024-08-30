@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'dart:ui' as UI;
 import 'package:fleet_management_app/ecs/components/route.dart';
 import 'package:fleet_management_app/ecs/components/station.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +11,10 @@ class WorldCanvas extends CustomPainter {
   final Camera camera;
   final List<Entity> stations;
   final List<Entity> vehicles;
+  final UI.Image? vehicleImage;
+  final UI.Image? stationImage;
   // constructor
-  WorldCanvas({super.repaint, required this.camera, required this.stations, required this.vehicles});
+  WorldCanvas({super.repaint, required this.camera, required this.stations, required this.vehicles, required this.vehicleImage, required this.stationImage});
 
   static const boardSize = 10.0;
   Position camPosition(Size size) => Position(x: camera.position.x - (size.width / boardSize) / 2, y: camera.position.y - (size.height / boardSize) / 2);
@@ -39,15 +41,18 @@ class WorldCanvas extends CustomPainter {
     }
 
     for (final station in stations) {
+      if (stationImage == null) return;
       final position = station.get<Station>().position;
       final offsetPosition = Offset(position.x - camPosition(size).x, position.y - camPosition(size).y);
       final stationPaint = Paint()
         ..color = Colors.green
         ..strokeWidth = 2;
-      canvas.drawCircle(offsetPosition * boardSize, 30, stationPaint);
+      drawImage(canvas, stationImage!, Size.square(100), offsetPosition * boardSize);
+      //canvas.drawCircle(offsetPosition * boardSize, 30, stationPaint);
     }
 
     for (final vehicle in vehicles) {
+      if (vehicleImage == null) return;
       final transform = vehicle.get<Vehicle>();
       final offsetPosition = Offset(transform.position.x - camPosition(size).x, transform.position.y - camPosition(size).y);
       final vehiclePaint = Paint()
@@ -57,11 +62,27 @@ class WorldCanvas extends CustomPainter {
       canvas.save();
       canvas.translate(offsetPosition.dx * boardSize, offsetPosition.dy * boardSize);
       canvas.rotate(transform.rotation * (pi / 180)); // Convert degrees to radians
-      canvas.drawRect(Rect.fromCenter(center: Offset(0, 0), width: 50, height: 20), vehiclePaint);
+      drawImage(canvas, vehicleImage!, Size(60, 30), Offset(0, 0));
+      //canvas.drawImageRect(vehicleImage!, Rect.fromLTWH(0, 0, 50, 20), Rect.fromCenter(center: Offset(0, 0), width: 50, height: 20), vehiclePaint);
       canvas.restore();
     }
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+
+  void drawImage(Canvas canvas, UI.Image image, Size desiredSize, Offset center) {
+    // Calculate the source rectangle (entire image)
+    final srcRect = Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble());
+
+    // Calculate the destination rectangle to center the image on the given offset
+    final dstRect = Rect.fromCenter(
+      center: center,
+      width: desiredSize.width,
+      height: desiredSize.height,
+    );
+
+    // Draw the image
+    canvas.drawImageRect(image, srcRect, dstRect, Paint());
+  }
 }

@@ -4,18 +4,22 @@ import 'package:reactive_ecs/group.dart';
 import 'package:reactive_ecs/state.dart';
 import 'package:reactive_ecs/widgets/entity_manager_provider.dart';
 
+/// Widget which observes an [Entity] instance and rebuilds when it changes.
+///
+/// The __child__ widget will not be rebuilt when changes occur.
+/// The __onMissingEntity__ widget will be shown when the entity is not found.
 class EntityObservingWidget extends StatelessWidget {
-  final Entity Function(EntityManager em) provider;
+  final Entity? Function(EntityManager em) provider;
   final Widget Function(BuildContext context, Entity entity, Widget? child) builder;
   final Widget? child;
+  final Widget onMissingEntity;
   // constructor
-  const EntityObservingWidget({super.key, required this.builder, required this.provider, this.child});
+  const EntityObservingWidget({super.key, required this.builder, required this.provider, this.child, this.onMissingEntity = const SizedBox()});
 
   @override
   Widget build(BuildContext context) {
-    final em = context.entityManager;
     final entity = provider(context.entityManager);
-    return ListenableBuilder(
+    return entity == null ? onMissingEntity : ListenableBuilder(
       listenable: entity,
       builder: (context, childWidget) => builder(context, entity, childWidget),
       child: child,
@@ -23,7 +27,11 @@ class EntityObservingWidget extends StatelessWidget {
   }
 }
 
+/// Widget which observes a [Group] instance and rebuilds when it changes.
+///
+/// The __child__ widget will not be rebuilt when changes occur.
 class GroupObservingWidget extends StatefulWidget {
+  /// The [GroupMatcher] describes the criteria for the group this system will react to.
   final GroupMatcher matcher;
   final Widget Function(BuildContext context, Group group, Widget? child) builder;
   final Widget? child;

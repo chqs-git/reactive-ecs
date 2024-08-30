@@ -40,10 +40,10 @@ class ManagerInterfaceState extends State<ManagerInterface> {
       ),
       child: EntityObservingWidget(
           provider: (em) => em.getUniqueEntity<Self>(),
-          builder: (_, self, __) => !self.hasRelationship<Selected>()
+          builder: (_, self, __) => !self.has<Selected>()
               ? CircularProgressIndicator()
               : EntityObservingWidget(
-                provider: (em) => self.getRelationshipEntity<Selected>(),
+                provider: (em) => self.getRelationship<Selected>().$1,
                 builder: (context, selected, _) => Column(
                   mainAxisSize: MainAxisSize.min,
                 children: [
@@ -53,8 +53,7 @@ class ManagerInterfaceState extends State<ManagerInterface> {
                       IconButton(
                           icon: const Icon(Icons.arrow_back),
                           onPressed: () {
-                            final selected = self.getRelationship<Selected>();
-                            final newIndex = selected.index - 1; // always within array bounds
+                            final newIndex = self.get<Selected>().index - 1; // always within array bounds
                             final entity = actors.entities[newIndex.abs() % (actors.entities.length)];
                             self + Camera(position: entity.has<Vehicle>() ? entity.get<Vehicle>().position : entity.get<Station>().position);
                             self.addRelationship(Selected(index: newIndex), entity);
@@ -64,8 +63,7 @@ class ManagerInterfaceState extends State<ManagerInterface> {
                       IconButton(
                           icon: const Icon(Icons.arrow_forward),
                           onPressed: () {
-                            final selected = self.getRelationship<Selected>();
-                            final newIndex = selected.index + 1; // always within array bounds
+                            final newIndex = self.get<Selected>().index + 1; // always within array bounds
                             final entity = actors.entities[newIndex.abs() % (actors.entities.length)];
                             self + Camera(position: entity.has<Vehicle>() ? entity.get<Vehicle>().position : entity.get<Station>().position);
                             self.addRelationship(Selected(index: newIndex), entity);
@@ -144,7 +142,7 @@ class ManagerInterfaceState extends State<ManagerInterface> {
               Expanded(
                   child: ListView(
                     children: [
-                      if (selected.hasRelationship<DeliveryTo>()) Column(
+                      if (selected.has<DeliveryTo>()) Column(
                         children: [
                           Container(
                             decoration: BoxDecoration(
@@ -156,11 +154,11 @@ class ManagerInterfaceState extends State<ManagerInterface> {
                                 child: Column(
                                   children: [
                                     Text(
-                                      'Delivering to ${selected.getRelationshipEntity<DeliveryTo>().get<Name>().name}',
+                                      'Delivering to ${selected.getRelationship<DeliveryTo>().$1.get<Name>().name}',
                                       style: TextStyle(color: Colors.white70, fontSize: 20, fontWeight: FontWeight.bold),
                                     ),
                                     Text(
-                                      '${distanceTo(selected.get<Vehicle>().position, selected.getRelationship<DeliveryTo>().end).toStringAsFixed(2)} units away',
+                                      '${distanceTo(selected.get<Vehicle>().position, selected.get<DeliveryTo>().end).toStringAsFixed(2)} units away',
                                       style: TextStyle(color: Colors.white54, fontSize: 16),
                                     )
                                   ],
@@ -169,7 +167,7 @@ class ManagerInterfaceState extends State<ManagerInterface> {
                           )
                         ],
                       ),
-                      if (!selected.hasRelationship<DeliveryTo>() && selected.get<Status>().state == StatusState.idle) Column(
+                      if (!selected.has<DeliveryTo>() && selected.get<Status>().state == StatusState.idle) Column(
                         children: [
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(

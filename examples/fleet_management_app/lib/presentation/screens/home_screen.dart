@@ -1,11 +1,8 @@
-
-import 'package:fleet_management_app/ecs/components/cargo_of.dart';
-import 'package:fleet_management_app/ecs/components/unique/selected.dart';
-import 'package:fleet_management_app/presentation/elements/manager_interface.dart';
+import 'dart:ui' as UI;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:reactive_ecs/reactive_ecs.dart';
-import 'package:reactive_ecs/relationship.dart';
 
 import '../../ecs/components/station.dart';
 import '../../ecs/components/unique/camera.dart';
@@ -21,6 +18,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
+  UI.Image? ship;
+  UI.Image? station;
+
+  @override
+  void initState() {
+    super.initState();
+    loadImage('assets/ship.png').then((image) {
+      setState(() {
+        ship = image;
+      });
+    });
+
+    loadImage('assets/oil_rig.png').then((image) {
+      setState(() {
+        station = image;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) =>
       GroupObservingWidget( // listen to updates to station
@@ -42,6 +58,8 @@ class HomeScreenState extends State<HomeScreen> {
                                 camera: entity.get<Camera>(),
                                 stations: stations.entities,
                                 vehicles: vehicles.entities,
+                                vehicleImage: ship,
+                                stationImage: station,
                               ),
                               size: Size.infinite,
                               child: Container(),
@@ -50,4 +68,10 @@ class HomeScreenState extends State<HomeScreen> {
                   )
             ),
       );
+}
+
+Future<UI.Image> loadImage(String path) async {
+  final data = await rootBundle.load(path);
+  final Uint8List bytes = data.buffer.asUint8List();
+  return await decodeImageFromList(bytes);
 }

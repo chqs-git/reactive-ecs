@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:reactive_ecs/system.dart';
-import 'package:reactive_ecs/entity_manager.dart';
 import 'package:reactive_ecs/reactive_ecs.dart';
-import '../behaviour.dart';
 
+/// Widget that handles all the systems and behaviours.
 class BehaviourManager extends StatefulWidget {
   final Behaviour behaviour;
   final ReactiveBehaviour reactiveBehaviour;

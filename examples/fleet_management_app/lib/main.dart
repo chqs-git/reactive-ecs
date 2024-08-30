@@ -2,6 +2,7 @@ import 'package:fleet_management_app/ecs/system/on_dock_system.dart';
 import 'package:fleet_management_app/presentation/elements/manager_interface.dart';
 import 'package:fleet_management_app/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:reactive_ecs/reactive_ecs.dart';
 
 import 'ecs/components/route.dart';
@@ -17,8 +18,8 @@ void main() {
 Widget buildEcs() {
   final entityManager = EntityManager()
     ..createEntity()
-        .add<Camera>(Camera(position: Position(x: 50, y: 50)))
-        .add<Self>(Self());
+        .add(Camera(position: Position(x: 50, y: 50)))
+        .add(Self());
 
   return EntityManagerProvider(
     entityManager: entityManager,

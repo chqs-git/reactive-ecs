@@ -5,6 +5,9 @@ import 'package:reactive_ecs/widgets/system.dart';
 
 import '../system.dart';
 
+/// Widget which holds a reference to an [EntityManager] instance and can expose it to children.
+///
+/// This widget will create the required behaviour widgets to support the given [System]s.
 class EntityManagerProvider extends InheritedWidget {
   final EntityManager entityManager;
 
@@ -21,8 +24,9 @@ class EntityManagerProvider extends InheritedWidget {
   @override
   bool updateShouldNotify(covariant EntityManagerProvider oldWidget) =>
       oldWidget.entityManager.currentIndex != entityManager.currentIndex ||
-      oldWidget.entityManager.components.length != entityManager.components.length;
+      oldWidget.entityManager.attributes.length != entityManager.attributes.length;
 
+  /// get the [EntityManager] instance from the [EntityManagerProvider] widget.
   static EntityManager of(BuildContext context) {
     final provider = context.dependOnInheritedWidgetOfExactType<EntityManagerProvider>();
     return provider!.entityManager;
@@ -40,5 +44,6 @@ class EntityManagerProvider extends InheritedWidget {
 }
 
 extension EntityManagerUtils on BuildContext {
+  /// get the [EntityManager] instance from the [EntityManagerProvider] widget.
   EntityManager get entityManager => EntityManagerProvider.of(this);
 }
