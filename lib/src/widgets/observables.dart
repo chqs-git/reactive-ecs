@@ -1,8 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:reactive_ecs/src/entity_manager.dart';
-import 'package:reactive_ecs/src/group.dart';
-import 'package:reactive_ecs/src/state.dart';
-import 'package:reactive_ecs/src/widgets/entity_manager_provider.dart';
+import '../../reactive_ecs.dart';
 
 /// Widget which observes an [Entity] instance and rebuilds when it changes.
 ///
@@ -51,5 +48,28 @@ class GroupObservingWidgetState extends State<GroupObservingWidget> {
     listenable: group,
     builder: (context, childWidget) => widget.builder(context, group, childWidget),
     child: widget.child,
+  );
+}
+
+typedef EntityMapBackedWidgetBuilder<A extends EntityAttribute, K> = Widget Function(EntityMultiMap<A, K> map, BuildContext context);
+typedef EntityMapProvider<A extends EntityAttribute, K> = EntityMultiMap<A, K> Function(EntityManager entityManager);
+
+class EntityMapObservingWidget<A extends EntityAttribute, K> extends StatefulWidget {
+  final EntityMapProvider<A, K> provider;
+  final EntityMapBackedWidgetBuilder<A, K> builder;
+
+  const EntityMapObservingWidget({super.key, required this.provider, required this.builder});
+
+  @override
+  EntityMapObservingWidgetState<A, K> createState() => EntityMapObservingWidgetState();
+}
+
+class EntityMapObservingWidgetState<A extends EntityAttribute, K> extends State<EntityMapObservingWidget<A, K>>{
+  late final EntityMultiMap<A, K> map = widget.provider(context.entityManager);
+
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: map,
+    builder: (context, childWidget) => widget.builder(map, context),
   );
 }
