@@ -6,11 +6,7 @@ import 'package:fleet_management_app/ecs/components/cargo_of.dart';
 import 'package:fleet_management_app/ecs/components/delivery_history.dart';
 import 'package:fleet_management_app/ecs/components/fuel.dart';
 import 'package:fleet_management_app/ecs/components/status.dart';
-import 'package:reactive_ecs/system.dart';
-import 'package:reactive_ecs/group.dart';
 import 'package:reactive_ecs/reactive_ecs.dart';
-import 'package:reactive_ecs/relationship.dart';
-import 'package:reactive_ecs/state.dart';
 import '../components/docked.dart';
 import '../components/name.dart';
 import '../components/route.dart';
@@ -45,12 +41,12 @@ class OnDockSystem extends ReactiveSystem {
               .addDelivery(DeliveryInfo(
                 destiny: station.get<Name>().name,
                 distance: distanceTo(delivery.start, delivery.end).toStringAsFixed(2),
-                cargoQuantity: cargos.map((e) => e.get<Cargo>()).fold(0, (sum, cargo) => sum + cargo.amount))
+                cargoQuantity: cargos.map((e) => e.$1.get<Cargo>()).fold(0, (sum, cargo) => sum + cargo.amount))
           ),
         );
     for (final cargoEntity in cargos) {
-      if (cargoEntity.get<Cargo>().type != stationDetails.producesType) {
-        cargoEntity.addRelationship(CargoOf(), station);
+      if (cargoEntity.$1.get<Cargo>().type != stationDetails.producesType) {
+        cargoEntity.$1.addRelationship(CargoOf(), station);
       }
     }
     // load new cargo

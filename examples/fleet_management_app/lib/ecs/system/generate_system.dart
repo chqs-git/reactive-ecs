@@ -4,10 +4,7 @@ import 'package:fleet_management_app/ecs/components/cargo.dart';
 import 'package:fleet_management_app/ecs/components/cargo_of.dart';
 import 'package:fleet_management_app/ecs/components/status.dart';
 import 'package:fleet_management_app/ecs/components/vehicle.dart';
-import 'package:reactive_ecs/system.dart';
 import 'package:reactive_ecs/reactive_ecs.dart';
-import 'package:reactive_ecs/relationship.dart';
-
 import '../components/fuel.dart';
 import '../components/name.dart';
 import '../components/route.dart';

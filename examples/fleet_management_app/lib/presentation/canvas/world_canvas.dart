@@ -3,7 +3,7 @@ import 'dart:ui' as UI;
 import 'package:fleet_management_app/ecs/components/route.dart';
 import 'package:fleet_management_app/ecs/components/station.dart';
 import 'package:flutter/material.dart';
-import 'package:reactive_ecs/state.dart';
+import 'package:reactive_ecs/reactive_ecs.dart';
 import '../../ecs/components/unique/camera.dart';
 import '../../ecs/components/vehicle.dart';
 

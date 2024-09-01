@@ -1,10 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reactive_ecs/system.dart';
-import 'package:reactive_ecs/entity_manager.dart';
-import 'package:reactive_ecs/group.dart';
-import 'package:reactive_ecs/state.dart';
-import 'package:reactive_ecs/behaviour.dart';
-import 'package:reactive_ecs/utils/group_utils.dart';
+import 'package:reactive_ecs/reactive_ecs.dart';
 
 class Place extends Component {
   final int index;

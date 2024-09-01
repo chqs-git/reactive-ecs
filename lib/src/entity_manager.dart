@@ -1,6 +1,6 @@
 import 'dart:collection';
-import 'package:reactive_ecs/error_handling.dart';
-import 'package:reactive_ecs/maps.dart';
+import 'package:reactive_ecs/src/error_handling.dart';
+import 'package:reactive_ecs/src/maps.dart';
 import 'data_structures/sparse_set.dart';
 import 'group.dart';
 import 'state.dart';

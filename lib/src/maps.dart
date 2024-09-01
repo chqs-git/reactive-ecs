@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:reactive_ecs/entity_manager.dart';
-import 'package:reactive_ecs/error_handling.dart';
-import 'package:reactive_ecs/state.dart';
+import 'package:reactive_ecs/src/entity_manager.dart';
+import 'package:reactive_ecs/src/error_handling.dart';
+import 'package:reactive_ecs/src/state.dart';
 
 /// A [KeyProducer] is a function that produces a key from an [EntityAttribute].
 typedef KeyProducer<Attribute extends EntityAttribute, T> = T Function(Attribute attribute);

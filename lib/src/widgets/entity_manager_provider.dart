@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:reactive_ecs/entity_manager.dart';
-import 'package:reactive_ecs/behaviour.dart';
-import 'package:reactive_ecs/widgets/system.dart';
+import 'package:reactive_ecs/src/behaviour.dart';
+import 'package:reactive_ecs/src/widgets/system.dart';
 
+import '../../reactive_ecs.dart';
 import '../system.dart';
 
 /// Widget which holds a reference to an [EntityManager] instance and can expose it to children.

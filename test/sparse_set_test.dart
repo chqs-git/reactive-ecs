@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reactive_ecs/data_structures/sparse_set.dart';
+import 'package:reactive_ecs/reactive_ecs.dart';
 
 void main() {
   test('add elements to set', () {

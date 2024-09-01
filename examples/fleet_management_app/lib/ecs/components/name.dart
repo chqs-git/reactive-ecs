@@ -1,5 +1,4 @@
-
-import 'package:reactive_ecs/state.dart';
+import 'package:reactive_ecs/reactive_ecs.dart';
 
 class Name extends Component {
   final String name;

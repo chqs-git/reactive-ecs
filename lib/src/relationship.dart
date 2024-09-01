@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:reactive_ecs/reactive_ecs.dart';
 
+import 'data_structures/sparse_set.dart';
 import 'error_handling.dart';
 
 /// A [Relationship] is a special type of [EntityAttribute]. It can contain data
@@ -26,6 +27,9 @@ import 'error_handling.dart';
 @immutable
 abstract class Relationship extends EntityAttribute {}
 
+@immutable
+abstract class MultiRelationship extends Relationship {}
+
 extension RelationshipOperations on Entity {
 
   /// Returns a (Entity, Relationship) pair if the relationship exists.
@@ -40,21 +44,10 @@ extension RelationshipOperations on Entity {
   /// Returns a (Entity, Relationship) pair if the relationship exists.
   ///
   /// __Null Safety__: If the relationship does not exist, it returns null.
-  (Entity, R)? getOrNullRelationship<R extends Relationship>() {
-    final relationship = getOrNull<R>();
-    final entityIndex = manager.relationships[index ^ R.hashCode];
-    if (relationship == null || entityIndex == null) return null;
-    final entity = manager.entities.get(entityIndex);
-    return entity != null ? (entity, relationship) : null;
-  }
+  (Entity, R)? getOrNullRelationship<R extends Relationship>() => _getOrNullRelationship<R>();
 
   /// Returns a list of all entities that have a relationship with this entity.
-  List<Entity> getAllEntitiesWithRelationship<R extends Relationship>() {
-    final sparseSet = manager.relationshipReverse[R];
-    return sparseSet?.get(index)?.map((index) => manager.entities.get(index))
-        .whereType<Entity>()
-        .toList() ?? [];
-  }
+  List<(Entity, R)> getAllEntitiesWithRelationship<R extends Relationship>() => _getAllEntitiesWithRelationship<R>();
 
   /// Adds to __this__ entity a [Relationship] with another [Entity].
   ///
@@ -98,5 +91,23 @@ extension RelationshipOperations on Entity {
     attributes.remove(type);
     updated(this, prev, null); // notify listeners
     return this;
+  }
+
+  List<(Entity, A)> _getAllEntitiesWithRelationship<A extends EntityAttribute>() {
+    final sparseSet = manager.relationshipReverse[A];
+    final entities = sparseSet?.get(index)?.map((index) => manager.entities.get(index))
+        .whereType<Entity>() ?? [];
+    return entities.map((e) => e.has<A>() ? (e, e.getOrNull<A>()!) : null)
+        .nonNulls
+        .toList();
+  }
+
+  // logic
+  (Entity, A)? _getOrNullRelationship<A extends EntityAttribute>() {
+    final relationship = getOrNull<A>();
+    final entityIndex = manager.relationships[index ^ A.hashCode];
+    if (relationship == null || entityIndex == null) return null;
+    final entity = manager.entities.get(entityIndex);
+    return entity != null ? (entity, relationship) : null;
   }
 }

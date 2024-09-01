@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:reactive_ecs/system.dart';
-import 'package:reactive_ecs/data_structures/sparse_set.dart';
-import 'package:reactive_ecs/entity_manager.dart';
-import 'package:reactive_ecs/utils/group_utils.dart';
+import 'package:reactive_ecs/src/system.dart';
+import 'package:reactive_ecs/src/entity_manager.dart';
+import 'package:reactive_ecs/src/utils/group_utils.dart';
+import 'data_structures/sparse_set.dart';
 import 'notifiers.dart';
 import 'state.dart';
 

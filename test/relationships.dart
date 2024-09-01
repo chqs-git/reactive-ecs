@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:reactive_ecs/reactive_ecs.dart';
-import 'package:reactive_ecs/relationship.dart';
+import 'package:reactive_ecs/src/relationship.dart';
 
 class Place extends Component {
   final String name;
@@ -59,7 +59,7 @@ void main() {
     // get all entities that have a relationship to => [place]
     final userRatings = place.getAllEntitiesWithRelationship<RatingOfPlace>();
     expect(userRatings.length, 3);
-    expect(userRatings[0].get<RatingOfPlace>().rating, 5);
+    expect(userRatings[0].$1.get<RatingOfPlace>().rating, 5);
   });
 
   test('listen to changes in group of entities with relationships', () {

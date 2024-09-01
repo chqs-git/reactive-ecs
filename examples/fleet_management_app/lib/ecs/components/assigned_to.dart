@@ -1,4 +1,6 @@
-import 'package:reactive_ecs/relationship.dart';
+
+
+import 'package:reactive_ecs/reactive_ecs.dart';
 
 enum Role {
   driver,

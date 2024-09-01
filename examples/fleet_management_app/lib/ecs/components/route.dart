@@ -3,7 +3,6 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:reactive_ecs/reactive_ecs.dart';
-import 'package:reactive_ecs/relationship.dart';
 
 class Position {
   final double x;

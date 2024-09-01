@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:reactive_ecs/state.dart';
+import 'package:reactive_ecs/src/state.dart';
 
 import 'system.dart';
 import 'group.dart';

@@ -1,5 +1,4 @@
-
-import 'package:reactive_ecs/relationship.dart';
+import 'package:reactive_ecs/reactive_ecs.dart';
 
 /// This relationship can be placed on other entities to represent that they
 /// are cargo of another entity.

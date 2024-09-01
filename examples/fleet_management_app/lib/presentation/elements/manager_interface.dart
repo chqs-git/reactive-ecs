@@ -15,7 +15,6 @@ import 'package:fleet_management_app/ecs/components/vehicle.dart';
 import 'package:fleet_management_app/presentation/elements/fuel_view.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_ecs/reactive_ecs.dart';
-import 'package:reactive_ecs/relationship.dart';
 
 import '../../ecs/components/assigned_to.dart';
 import '../../ecs/components/station.dart';
@@ -101,7 +100,7 @@ class ManagerInterfaceState extends State<ManagerInterface> {
                           Row(
                             children: [
                               stat(Icon(Icons.people, color: Colors.blueGrey), selected.getAllEntitiesWithRelationship<AssignedTo>().length),
-                              stat(Icon(Icons.inventory, color: Colors.blueGrey), selected.getAllEntitiesWithRelationship<CargoOf>().map((e) => e.get<Cargo>())
+                              stat(Icon(Icons.inventory, color: Colors.blueGrey), selected.getAllEntitiesWithRelationship<CargoOf>().map((e) => e.$1.get<Cargo>())
                                   .fold(0, (sum, cargo) => sum + cargo.amount)
                               )
                             ],

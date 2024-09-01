@@ -1,4 +1,4 @@
-import 'package:reactive_ecs/state.dart';
+import 'package:reactive_ecs/reactive_ecs.dart';
 
 class Counter extends UniqueComponent {
   final int value;

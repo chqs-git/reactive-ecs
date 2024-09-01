@@ -1,5 +1,5 @@
-import 'package:reactive_ecs/group.dart';
-import 'package:reactive_ecs/state.dart';
+import 'package:reactive_ecs/src/group.dart';
+import 'package:reactive_ecs/src/state.dart';
 
 import 'entity_manager.dart';
 

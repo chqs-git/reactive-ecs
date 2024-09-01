@@ -1,6 +1,6 @@
 import 'dart:collection';
-import 'package:reactive_ecs/system.dart';
-import 'package:reactive_ecs/state.dart';
+import 'package:reactive_ecs/src/system.dart';
+import 'package:reactive_ecs/src/state.dart';
 import 'entity_manager.dart';
 
 class Behaviour {

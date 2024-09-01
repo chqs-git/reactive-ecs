@@ -1,7 +1,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reactive_ecs/entity_manager.dart';
-import 'package:reactive_ecs/relationship.dart';
+import 'package:reactive_ecs/src/entity_manager.dart';
+import 'package:reactive_ecs/src/relationship.dart';
 
 import 'components.dart';
 import 'relationships.dart';

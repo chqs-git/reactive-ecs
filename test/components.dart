@@ -1,4 +1,4 @@
-import 'package:reactive_ecs/state.dart';
+import 'package:reactive_ecs/src/state.dart';
 
 class ShoppingItem extends Component {
   final String id;

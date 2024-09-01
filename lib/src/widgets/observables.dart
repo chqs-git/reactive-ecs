@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:reactive_ecs/entity_manager.dart';
-import 'package:reactive_ecs/group.dart';
-import 'package:reactive_ecs/state.dart';
-import 'package:reactive_ecs/widgets/entity_manager_provider.dart';
+import 'package:reactive_ecs/src/entity_manager.dart';
+import 'package:reactive_ecs/src/group.dart';
+import 'package:reactive_ecs/src/state.dart';
+import 'package:reactive_ecs/src/widgets/entity_manager_provider.dart';
 
 /// Widget which observes an [Entity] instance and rebuilds when it changes.
 ///

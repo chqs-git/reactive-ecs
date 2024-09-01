@@ -1,8 +1,8 @@
 import 'dart:collection';
 import 'package:flutter/cupertino.dart';
-import 'package:reactive_ecs/error_handling.dart';
-import 'package:reactive_ecs/relationship.dart';
-import 'package:reactive_ecs/utils/group_utils.dart';
+import 'package:reactive_ecs/src/error_handling.dart';
+import 'package:reactive_ecs/src/relationship.dart';
+import 'package:reactive_ecs/src/utils/group_utils.dart';
 import 'data_structures/sparse_set.dart';
 import 'entity_manager.dart';
 import 'notifiers.dart';

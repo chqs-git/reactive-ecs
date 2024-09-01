@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:fleet_management_app/ecs/components/docked.dart';
 import 'package:fleet_management_app/ecs/components/fuel.dart';
 import 'package:reactive_ecs/reactive_ecs.dart';
-import 'package:reactive_ecs/relationship.dart';
 import '../components/route.dart';
 import '../components/vehicle.dart';
 
