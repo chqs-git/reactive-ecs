@@ -67,7 +67,6 @@ Widget build(BuildContext context) => EntityObservingWidget(
 
 For contact information use: franciscobarreiras.fb@gmail.com.
 
-To Support:
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y312MBRY)
 
 ## Acknowledgements

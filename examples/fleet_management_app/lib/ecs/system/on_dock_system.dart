@@ -17,7 +17,7 @@ class OnDockSystem extends ReactiveSystem {
   @override
   GroupMatcher get matcher => GroupMatcher(all: [Vehicle], relevant: [DockedIn, DeliveryTo]);
   @override
-  GroupEventType get event => GroupEventType.addOrUpdated;
+  GroupEventType get event => GroupEventType.addedOrUpdated;
 
   final random = Random();
 

@@ -103,4 +103,4 @@ abstract class ReactiveSystem extends EntityManagerSystem {
   void execute(Entity entity, ChangeDetails details);
 }
 
-enum GroupEventType { add, updated, addOrUpdated, remove, any }
+enum GroupEventType { added, updated, addedOrUpdated, removed, any }

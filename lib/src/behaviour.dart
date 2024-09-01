@@ -79,7 +79,7 @@ class ReactiveBehaviour {
 
     executing = true;
     final system = systems[index];
-    if (system.event == GroupEventType.any || system.event == event || system.event == GroupEventType.addOrUpdated && (event == GroupEventType.add || event == GroupEventType.updated)) {
+    if (system.event == GroupEventType.any || system.event == event || system.event == GroupEventType.addedOrUpdated && (event == GroupEventType.added || event == GroupEventType.updated)) {
       system.execute(entity, details);
     }
 

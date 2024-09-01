@@ -53,7 +53,7 @@ class RatingSystem extends ReactiveSystem {
   GroupMatcher get matcher => GroupMatcher(all: [UserRating]);
 
   @override
-  GroupEventType get event => GroupEventType.add;
+  GroupEventType get event => GroupEventType.added;
 
   @override
   void execute(Entity entity, ChangeDetails details) {
@@ -78,7 +78,7 @@ class PlaceLoggingSystem extends ReactiveSystem {
   GroupMatcher get matcher => GroupMatcher(all: [Place, PlaceRating]);
 
   @override
-  GroupEventType get event => GroupEventType.addOrUpdated;
+  GroupEventType get event => GroupEventType.addedOrUpdated;
 
   @override
   void execute(Entity entity, ChangeDetails details) {

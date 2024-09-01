@@ -46,7 +46,7 @@ class GroupNotifier extends ChangeNotifier {
   void added(Group group, Entity entity, ChangeDetails details) {
     // notify reactive systems
     for (var listener in _subscribers) {
-      listener(GroupEventType.add, entity, details);
+      listener(GroupEventType.added, entity, details);
     }
     notifyListeners(); // notify listeners
   }
@@ -62,7 +62,7 @@ class GroupNotifier extends ChangeNotifier {
   void removed(Group group, Entity entity, ChangeDetails details) {
     // notify reactive systems
     for (var listener in _subscribers) {
-      listener(GroupEventType.remove, entity, details);
+      listener(GroupEventType.removed, entity, details);
     }
     notifyListeners(); // notify listeners
   }
