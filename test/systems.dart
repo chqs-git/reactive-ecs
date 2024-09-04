@@ -32,7 +32,7 @@ class Logger extends UniqueComponent {
 
 class FetchPlaces extends EntityManagerSystem implements InitSystem {
   @override
-  void init(void Function() notifyWidgets) {
+  Future<void> init(void Function() notifyWidgets) async {
     /// "Fetch places"
     entityManager.createEntity() + Logger(log: ["Fetching Places..."]);
     entityManager.createEntity()

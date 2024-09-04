@@ -12,7 +12,7 @@ class Behaviour {
 
   /// Initialize behaviour
   /// This is called by the behaviour Widget when it is initialized
-  void init({Function()? setState}) {
+  void init({Function()? setState}) async {
     for(int i = 0; i < initSystems.length; i++) {
       final s = initSystems[i];
       if (s is EntityManagerSystem) (s as EntityManagerSystem).manager = _entityManager;
@@ -23,16 +23,16 @@ class Behaviour {
       if (s is EntityManagerSystem) (s as EntityManagerSystem).manager = _entityManager;
     }
 
-    for(int i = 0; i < initSystems.length; i++) {
-      initSystems[i].init(setState ?? () {});
+    for (final s in initSystems) {
+      await s.init(setState ?? () {});
     }
   }
 
   /// Dispose of behaviour
   /// This is called by the behaviour Widget when it is disposed
-  void dispose() {
+  void dispose() async {
     for(int i = 0; i < cleanupSystems.length; i++) {
-      cleanupSystems[i].cleanup();
+      await cleanupSystems[i].cleanup();
     }
   }
 }

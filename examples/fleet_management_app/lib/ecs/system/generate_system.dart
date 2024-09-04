@@ -19,7 +19,7 @@ class GenerateSystem extends EntityManagerSystem implements InitSystem {
 
   final random = Random();
   @override
-  void init(void Function() notifyWidgets) {
+  Future<void> init(void Function() notifyWidgets) async {
     // create stations
     final numStations = (random.nextInt(2) + 4) * entityMultiplier; // between 4 and 6
     print(numStations);

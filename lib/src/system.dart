@@ -39,7 +39,7 @@ abstract class ExecuteSystem extends System {
 /// ```
 /// __Note__: In flutter the __init__ method is called in the [init] method of the widget.
 abstract class InitSystem extends System {
-  void init(void Function() notifyWidgets);
+  Future<void> init(void Function() notifyWidgets);
 }
 
 /// Interface for systems to run logic at disposal.
@@ -54,7 +54,7 @@ abstract class InitSystem extends System {
 ///```
 /// __Note__: In flutter the __cleanup__ method is called in the [dispose] method of the widget.
 abstract class CleanupSystem extends System {
-  void cleanup();
+  Future<void> cleanup();
 }
 
 /// Interface that systems need to __extend__ from to access the [EntityManager].
