@@ -27,7 +27,11 @@ abstract class ExecuteSystem extends System {
   void cleanup();
 }
 
-/// Interface for systems to run login at initialization.
+/// Interface for systems that need to execute logic at initialization and cleanup.
+abstract class Init extends System {}
+abstract class Cleanup extends System {}
+
+/// Interface for systems to run logic at initialization.
 ///
 /// ```dart
 /// class MySystem extends EntityManagerSystem implements InitSystem {
@@ -38,7 +42,22 @@ abstract class ExecuteSystem extends System {
 /// }
 /// ```
 /// __Note__: In flutter the __init__ method is called in the [init] method of the widget.
-abstract class InitSystem extends System {
+abstract class InitSystem extends Init {
+  void init(void Function() notifyWidgets);
+}
+
+/// Interface for systems to run **asynchronous** logic at initialization.
+///
+/// ```dart
+/// class MySystem extends EntityManagerSystem implements InitSystem {
+///  @override
+///  void init(void Function() notifyWidgets) {
+///  // logic to run at initialization
+///  }
+/// }
+/// ```
+/// __Note__: In flutter the __init__ method is called in the [init] method of the widget.
+abstract class AsyncInitSystem extends Init {
   Future<void> init(void Function() notifyWidgets);
 }
 
@@ -53,7 +72,22 @@ abstract class InitSystem extends System {
 /// }
 ///```
 /// __Note__: In flutter the __cleanup__ method is called in the [dispose] method of the widget.
-abstract class CleanupSystem extends System {
+abstract class CleanupSystem extends Cleanup {
+  void cleanup();
+}
+
+/// Interface for systems to run **asynchronous** logic at disposal.
+///
+/// ```dart
+/// class MySystem extends EntityManagerSystem implements CleanupSystem {
+///  @override
+///  void cleanup() {
+///  // logic to run at cleanup
+///  }
+/// }
+///```
+/// __Note__: In flutter the __cleanup__ method is called in the [dispose] method of the widget.
+abstract class AsyncCleanupSystem extends Cleanup {
   Future<void> cleanup();
 }
 

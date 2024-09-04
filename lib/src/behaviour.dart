@@ -4,8 +4,8 @@ import 'package:reactive_ecs/src/state.dart';
 import 'entity_manager.dart';
 
 class Behaviour {
-  final List<InitSystem> initSystems;
-  final List<CleanupSystem> cleanupSystems;
+  final List<Init> initSystems;
+  final List<Cleanup> cleanupSystems;
   final EntityManager _entityManager;
   // constructor
   Behaviour({this.initSystems = const [], this.cleanupSystems = const [], required EntityManager entityManager}) : _entityManager = entityManager;
@@ -24,15 +24,17 @@ class Behaviour {
     }
 
     for (final s in initSystems) {
-      await s.init(setState ?? () {});
+      if (s is AsyncInitSystem) await s.init(setState ?? () {});
+      else (s as InitSystem).init(setState ?? () {});
     }
   }
 
   /// Dispose of behaviour
   /// This is called by the behaviour Widget when it is disposed
   void dispose() async {
-    for(int i = 0; i < cleanupSystems.length; i++) {
-      await cleanupSystems[i].cleanup();
+    for (final s in cleanupSystems) {
+      if (s is CleanupSystem) s.cleanup();
+      else await (s as AsyncCleanupSystem).cleanup();
     }
   }
 }
