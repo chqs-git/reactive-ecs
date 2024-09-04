@@ -33,11 +33,11 @@ class EntityManagerProvider extends InheritedWidget {
   }
 
   static Behaviour _buildBehaviour(List<System> systems, EntityManager em) {
-    final initSystems = <InitSystem>[];
-    final cleanupSystems = <CleanupSystem>[];
+    final initSystems = <Init>[];
+    final cleanupSystems = <Cleanup>[];
     for (final system in systems) {
-      if (system is InitSystem) initSystems.add(system);
-      if (system is CleanupSystem) cleanupSystems.add(system);
+      if (system is Init) initSystems.add(system);
+      if (system is Cleanup) cleanupSystems.add(system);
     }
     return Behaviour(initSystems: initSystems, cleanupSystems: cleanupSystems, entityManager: em);
   }
