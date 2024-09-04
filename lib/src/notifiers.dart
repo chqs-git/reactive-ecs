@@ -20,12 +20,13 @@ class EntityListenable extends ChangeNotifier {
   }
 
   void updated(Entity e, EntityAttribute? prev, EntityAttribute? next) {
-    // notify reactive systems
-    for (EntityCallback listener in _subscribers) {
-      listener(e, prev, next);
-    }
-    notifyListeners(); // notify listeners
+  // notify reactive systems
+  final subscribersCopy = List<EntityCallback>.from(_subscribers);
+  for (EntityCallback listener in subscribersCopy) {
+    listener(e, prev, next);
   }
+  notifyListeners(); // notify listeners
+}
 }
 
 /// The [GroupCallback] is a function that is called when an [Entity] is added, updated or removed from a [Group].
@@ -44,24 +45,27 @@ class GroupNotifier extends ChangeNotifier {
   }
 
   void added(Group group, Entity entity, ChangeDetails details) {
+    final subscribersCopy = List<GroupCallback>.from(_subscribers);
     // notify reactive systems
-    for (var listener in _subscribers) {
+    for (var listener in subscribersCopy) {
       listener(GroupEventType.added, entity, details);
     }
     notifyListeners(); // notify listeners
   }
 
   void updated(Group group, Entity entity, ChangeDetails details) {
+    final subscribersCopy = List<GroupCallback>.from(_subscribers);
     // notify reactive systems
-    for (var listener in _subscribers) {
+    for (var listener in subscribersCopy) {
       listener(GroupEventType.updated, entity, details);
     }
     notifyListeners(); // notify listeners
   }
 
   void removed(Group group, Entity entity, ChangeDetails details) {
+    final subscribersCopy = List<GroupCallback>.from(_subscribers);
     // notify reactive systems
-    for (var listener in _subscribers) {
+    for (var listener in subscribersCopy) {
       listener(GroupEventType.removed, entity, details);
     }
     notifyListeners(); // notify listeners
