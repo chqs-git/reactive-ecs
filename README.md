@@ -1,4 +1,10 @@
+
 # Reactive Entity Component System (RECS)
+
+<div align="center">
+  <img src="https://github.com/chqs-git/reactive-ecs/blob/main/media/RECS.png" width="100%" height="100%">
+</div>
+
 
 RECS is a fast & lightweight Reactive Entity Component System pattern for Dart and Flutter, targeted at Widgets and
 state management. This project is Open Source and is under the MIT License.
@@ -10,10 +16,6 @@ A Entity Component System is a pattern that **separates state from behaviour**. 
 - Components: Data that represents the state of an entity;
 - Systems: Logic that operates on entities with specific components;
 
-<div align="center">
-  <img src="https://github.com/chqs-git/reactive-ecs/blob/main/media/example.png" width="75%" height="75%">
-</div>
-
 ## Usage
 
 To use this package, add `reactive-ecs` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
@@ -24,7 +26,11 @@ dependencies:
       git: https://github.com/chqs-git/reactive-ecs.git
 ```
 
-#### Code Example
+## Example
+
+<div align="center">
+  <img src="https://github.com/chqs-git/reactive-ecs/blob/main/media/example.png" width="75%" height="75%">
+</div>
 
 ```dart
 final max = entityManager.createEntity()
