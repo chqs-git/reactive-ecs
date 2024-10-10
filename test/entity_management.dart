@@ -204,4 +204,52 @@ void main() {
 
     expect(numOfChanges, 6);
   });
+
+  test('Remove correct listener from group', () {
+    EntityManager em = EntityManager();
+    var e1 = em.createEntity()
+      ..add(ShoppingItem('Eggs'))
+      ..add(Price(1.2))
+      ..add(Sale(50));
+    var e2 = em.createEntity()
+      ..add(ShoppingItem('Avocado'))
+      ..add(Price(2.5));
+
+    // create group
+    var group = em.group(GroupMatcher(all: [ShoppingItem, Price], relevant: [Sale]));
+
+    expect(group.length, 2);
+    int channelA = 0;
+    final listenerA = (event, entity, details) { channelA += 1; };
+    int channelB = 0;
+    final listenerB = (event, entity, details) { channelB += 2; };
+    int channelC = 0;
+    final listenerC = (event, entity, details) { channelC += 3; };
+    group.subscribe(listenerA);
+    group.subscribe(listenerB);
+    group.subscribe(listenerC);
+
+    e2 + Sale(50); // add 50 % safe
+
+    expect(channelA, 1);
+    expect(channelB, 2);
+    expect(channelC, 3);
+
+    // remove listenerB
+    group.unsubscribe(listenerB);
+
+    e2 + Sale(90);
+
+    expect(channelA, 2);
+    expect(channelB, 2);
+    expect(channelC, 6);
+
+    group.unsubscribe(listenerA);
+
+    e2 + Sale(10);
+
+    expect(channelA, 2);
+    expect(channelB, 2);
+    expect(channelC, 9);
+  });
 }

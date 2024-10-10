@@ -19,8 +19,8 @@ extension GroupUtils on Group {
     }
   }
 
-  /// Get the entities in the group.
-  List<Entity> get entities => data.dense;
+  /// Get a copy of the entities present in the group.
+  List<Entity> get entities => List.from(data.dense);
 
   /// Check if the group contains the specified entity.
   bool contains(Entity entity) => data.sparse.containsKey(entity.index);
